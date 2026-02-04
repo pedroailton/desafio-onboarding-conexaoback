@@ -6,6 +6,13 @@ interface SearchBarProps {
     aoBuscar: () => void; // Função não recebe nenhum parâmetro e não retorna nada
 }
 
+/**
+ * Você digita "A".
+ * O onChange dispara e chama aoDigitar("A").
+ * Lá no Pai (SecaoVitrine), o handleBusca roda e faz setTextoBusca("A").
+ * O React atualiza o estado e renderiza o input de novo, agora com value="A".
+ * Atualizando o estado, o React também roda o useEffect lá no Pai, que busca as receitas.
+ */
 export function SearchBar({ textoBusca, aoDigitar, aoBuscar }: SearchBarProps) {
     return (
         <div className='flex flex-row items-center w-full max-w-[700px] h-[60px] justify-between bg-[var(--bege)] p-2 border border-black rounded-md'>
