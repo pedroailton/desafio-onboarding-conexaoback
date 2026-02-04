@@ -5,17 +5,30 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /*Paleta de Cores*/
+  --laranja: #C44900;
+  --vinho: #432534;
+
+  --branco-puro: white;
+  --bege: #EFD6AC;
+  --preto: #2A2A2A;
+
+  --warning: #FFDD57;
+  --error: #FF5C5C;
+  --success: #4CAF50;
+  --info: #2196F3;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+h2 {
+  font-size: 32px;
+  font-weight: normal;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+button {
+  color: var(--preto);
+  background-color: var(--bege);
+  border-radius: 16px;
+  font-size: 32px;
+  font-weight: normal;
 }
