@@ -11,19 +11,19 @@ export function PageButtons({ paginaAtual, setPaginaAtual, totalItens, itensPorP
     const totalPaginas = Math.ceil(totalItens / itensPorPagina);
 
     return (
-        <div className="flex flex-row justify-center items-center gap-4 mt-8">
+        <div className="flex flex-row justify-center items-center gap-4 mt-10 mb-6">
             <button
-                className="p-2 border rounded hover:bg-gray-100  disabled:opacity-50"
+                className="p-2 border rounded-lg hover:bg-gray-100  disabled:opacity-50"
                 disabled={paginaAtual === 1}
                 onClick={() => setPaginaAtual(paginaAtual - 1)}
             >
                 <ChevronLeftIcon />
             </button>
 
-            <span>{`Página ${paginaAtual} de ${totalPaginas}`}</span>
+            <span className="text-[24px]">{`Página ${paginaAtual} de ${totalPaginas}`}</span>
             
             <button
-                className="p-2 border rounded hover:bg-gray-100  disabled:opacity-50"
+                className="p-2 border rounded-lg hover:bg-gray-100  disabled:opacity-50"
                 disabled={paginaAtual === totalPaginas}
                 onClick={() => setPaginaAtual(paginaAtual + 1)}
             >

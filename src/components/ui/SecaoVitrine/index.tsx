@@ -8,6 +8,7 @@ import { FilterSelection } from './FilterSelection'
 import { PageButtons } from "./PageButtons";
 
 import { Meal, getAllMealsByCategories, getMealsByName } from "@/app/api/api";
+import { Loading } from "./Loading/loading";
 
 // Fingir que temos esses filtros disponíveis
 const CATEGORIAS_DISPONIVEIS = ['Beef', 'Chicken', 'Dessert', 'Pasta'];
@@ -17,18 +18,25 @@ export function SecaoVitrine() {
 
     const [receitas, setReceitas] = useState<Meal[]>([]); // Estado para armazenar as receitas
 
-    // Estado inicial: nada selecionado
     const [filtrosSelecionados, setFiltrosSelecionados] = useState<string[]>([]);
 
     const [textoBusca, setTextoBusca] = useState<string>('');
 
+    const [carregando, setCarregando] = useState<boolean>(true);
+
+    const [sucessoBusca, setSucessoBusca] = useState<boolean>(true);
+
     useEffect(() => {
-        async function fetchReceitas() {   
+        async function fetchReceitas() {  
+            
+            setCarregando(true);
+
             try {
                 // CENÁRIO A: Tem texto na busca? Então buscamos por NOME.
                 if (textoBusca.trim() !== '') {
                     const response = await getMealsByName(textoBusca);
                     setReceitas(response || [])
+                    setSucessoBusca(response && response.length > 0);
                     setPaginaAtual(1); // Reseta para a primeira página ao buscar por nome
                 } 
                 // CENÁRIO B: Não tem busca? Então buscamos por CATEGORIA.
@@ -40,15 +48,23 @@ export function SecaoVitrine() {
                     
                     const response = await getAllMealsByCategories(categoriasParaBuscar);
                     setReceitas(response || []);
+                    setSucessoBusca(response && response.length > 0);
                     setPaginaAtual(1); // Reseta para a primeira página ao filtrar por categoria
                 }
             } catch (error) {
                 console.error('Erro ao buscar receitas:', error);
                 setReceitas([]); // Em caso de erro, limpa a lista
+                setSucessoBusca(false);
+            } finally {
+                setCarregando(false);
+
+                if(sucessoBusca) {
+                    console.log('Busca realizada com sucesso.');
+                }
             }
         }
         fetchReceitas();
-    }, [filtrosSelecionados, textoBusca]); // Roda sempre que um dos dois mudar
+    }, [filtrosSelecionados, sucessoBusca, textoBusca]);
 
     // Variáveis para paginação
     const ITENS_POR_PAGINA = 9;
@@ -74,14 +90,15 @@ export function SecaoVitrine() {
     }
 
     return (
-        <section id="vitrine">
-            <div>
-                <h2>Receitas</h2>
-                <p>hajbdsjabhdoja ahsdjhasljd hlaj akshjdlkjahsj ajhdjksahjldhajl ajxcoanjcoid aod ianjdsljkandkljashn oaidjsoanljansdoi aoidjsoanj</p>
+        <section id="vitrine" className="mt-6">
+            <div className="flex flex-col items-center mb-8 gap-[10px]">
+                <h2 className="text-[var(--preto)] text-center font-semibold">Receitas</h2>
+                <p className="text-[var(--preto)] text-center text-[26px]">Descubra um mundo de possibilidades culinárias. De clássicos reconfortantes a sabores exóticos, nossa coleção diversificada foi pensada para transformar qualquer ingrediente em uma experiência inesquecível, independente da sua habilidade na cozinha.</p>
             </div>
-            <div id='vitrine' className="flex flex-row items-center flex-start gap-[50px]">
-                <div id='filtrar' className="flex flex-col items-start gap-[10px]">
-                    <span>Filtros</span>
+
+            <div className="flex flex-row items-start mx-auto gap-[50px] px-[80px]">
+                <div id='filtrar' className="flex flex-col w-max items-start gap-[10px]">
+                    <h2>Filtros</h2>
                     {CATEGORIAS_DISPONIVEIS.map(categoria => (
                         <FilterSelection
                             key={categoria}
@@ -91,26 +108,32 @@ export function SecaoVitrine() {
                         />
                     ))}
                 </div>
-                <div id='pesquisa-e-cards'>
+                <div id='pesquisa-e-cards' className="justify-center flex flex-col items-center gap-[30px]">
                     <SearchBar textoBusca={textoBusca} aoDigitar={handleBusca} aoBuscar={() => {}} />
 
-                    <div id="cards" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[50px]">
-                        {receitasPaginaAtual.map(receita => (
-                            <RecipeCard key={receita.idMeal} receita={receita} />
-                        ))}
-                    </div>
+                    {carregando ? (
+                        <Loading />
+                    ) : (
+                        <div>
+                            <div id="cards" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[50px]">
+                                {receitasPaginaAtual.map(receita => (
+                                    <RecipeCard key={receita.idMeal} receita={receita} />
+                                ))}
+                            </div>
 
-                    {/* Mensagem caso não tenha resultados */}
-                    {receitas.length === 0 && (
-                    <div className="w-full text-center py-10">
-                        <p className="text-gray-500 text-xl">Nenhuma receita encontrada. 😔</p>
-                    </div>
-                    )}
+                            {/* Mensagem caso não tenha resultados */}
+                            {receitas.length === 0 && (
+                            <div className="w-full text-center py-10">
+                                <p className="text-gray-500 text-xl">Nenhuma receita encontrada.</p>
+                            </div>
+                            )}
+                        </div>
+                    )
+                    }
                 </div>
             </div>
-
             {/* Botões de Paginação */}
-            {totalPaginas > 1 && (<PageButtons
+            {totalPaginas > 1 && !carregando && (<PageButtons
                 paginaAtual={paginaAtual}
                 setPaginaAtual={setPaginaAtual}
                 totalItens={receitas.length}

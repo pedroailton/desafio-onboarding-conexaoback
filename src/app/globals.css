@@ -20,8 +20,19 @@
   --info: #2196F3;
 }
 
+body {
+  background-color: transparent;
+  color: var(--foreground);
+  font-family: 'Arial', sans-serif;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: normal;
+}
+
 h2 {
-  font-size: 32px;
+  font-size: 40px;
   font-weight: normal;
 }
 
