@@ -70,6 +70,6 @@ Sempre que a filtragem é feita, o resultado da pesquisa feita pela barra de pes
 Por isso, em um primeiro momento de uso da aplicação o filtro "beef" parece não funcionar.
 
 ## Screenshots da Execução da Aplicação
-<img src='public/images/screenshot-1' alt='Screenshot da NavBar + Banner' width='400'></img>
-<img src='public/images/screenshot-2' alt='Screenshot da Vitrine' width='400'></img>
-<img src='public/images/screenshot-3' alt='Screenshot da Vitrine + Footer + Banner' width='400'></img>
+<img src='public/images/screenshot-1.png' alt='Screenshot da NavBar + Banner' width='400'></img>
+<img src='public/images/screenshot-2.png' alt='Screenshot da Vitrine' width='400'></img>
+<img src='public/images/screenshot-3.png' alt='Screenshot da Vitrine + Footer + Banner' width='400'></img>
